@@ -1,0 +1,14 @@
+# Git
+.git
+.gitignore
+
+# Dependencies
+node_modules
+**/node_modules
+
+# Build output (rebuilt on Vercel)
+**/dist
+
+# Environment / secrets
+.env
+.env.*

@@ -8,8 +8,12 @@ const pool = mysql.createPool({
   database: process.env.DB_NAME || 'school_management',
   port: process.env.DB_PORT || 3306,
   waitForConnections: true,
-  connectionLimit: 10,
+  connectionLimit: Number(process.env.DB_POOL_LIMIT) || 10,
   queueLimit: 0,
+  enableKeepAlive: true,
+  ...(process.env.DB_SSL === 'true'
+    ? { ssl: { rejectUnauthorized: false } }
+    : {}),
 });
 
 module.exports = pool;
