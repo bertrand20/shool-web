@@ -1,0 +1,194 @@
+@import "tailwindcss";
+
+@theme {
+  --color-school-primary: #1e40af;
+  --color-school-primary-light: #3b82f6;
+  --color-school-primary-dark: #1e3a8a;
+  --color-school-accent: #f59e0b;
+  --color-school-accent-light: #fbbf24;
+  --color-school-surface: #f8fafc;
+  --color-school-border: #e2e8f0;
+  --color-school-text: #1e293b;
+  --color-school-muted: #64748b;
+  --color-school-success: #059669;
+  --color-school-danger: #dc2626;
+  --color-school-warning: #d97706;
+  --font-family-heading: "Inter", system-ui, sans-serif;
+  --font-family-body: "Inter", system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--font-family-body);
+  color: var(--color-school-text);
+  background: var(--color-school-surface);
+}
+
+.btn-primary {
+  @apply bg-school-primary text-white px-5 py-2.5 rounded-lg font-medium
+    hover:bg-school-primary-dark active:scale-[0.97]
+    transition-all duration-150 cursor-pointer
+    disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100;
+}
+
+.btn-secondary {
+  @apply bg-white text-school-text border border-school-border px-5 py-2.5 rounded-lg font-medium
+    hover:bg-gray-50 active:scale-[0.97]
+    transition-all duration-150 cursor-pointer
+    disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100;
+}
+
+.btn-danger {
+  @apply bg-red-600 text-white px-5 py-2.5 rounded-lg font-medium
+    hover:bg-red-700 active:scale-[0.97]
+    transition-all duration-150 cursor-pointer
+    disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100;
+}
+
+.btn-sm {
+  @apply px-3 py-1.5 text-sm;
+}
+
+.panel-card {
+  @apply bg-white rounded-xl border border-school-border p-6
+    shadow-sm;
+}
+
+.page-header {
+  @apply mb-8;
+}
+
+.page-title {
+  @apply text-2xl font-bold text-school-text tracking-tight;
+}
+
+.page-subtitle {
+  @apply text-sm text-school-muted mt-1;
+}
+
+.input-field {
+  @apply w-full px-4 py-2.5 rounded-lg border border-school-border
+    bg-white text-school-text
+    focus:outline-none focus:ring-2 focus:ring-school-primary-light focus:border-transparent
+    placeholder:text-gray-400
+    transition-all duration-150;
+}
+
+.select-field {
+  @apply w-full px-4 py-2.5 rounded-lg border border-school-border
+    bg-white text-school-text appearance-none
+    focus:outline-none focus:ring-2 focus:ring-school-primary-light focus:border-transparent
+    transition-all duration-150;
+}
+
+.table-row-interactive {
+  @apply hover:bg-blue-50/60 cursor-pointer transition-colors duration-100;
+}
+
+.badge-active {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+    bg-emerald-100 text-emerald-800;
+}
+
+.badge-inactive {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+    bg-gray-100 text-gray-600;
+}
+
+.badge-warning {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+    bg-amber-100 text-amber-800;
+}
+
+.badge-danger {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+    bg-red-100 text-red-800;
+}
+
+.modal-backdrop {
+  @apply fixed inset-0 bg-black/40 backdrop-blur-sm z-50
+    flex items-center justify-center p-4;
+}
+
+.modal-content {
+  @apply bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto;
+}
+
+.modal-header {
+  @apply flex items-center justify-between px-6 py-4 border-b border-school-border;
+}
+
+.modal-body {
+  @apply px-6 py-5;
+}
+
+.modal-footer {
+  @apply flex items-center justify-end gap-3 px-6 py-4 border-t border-school-border;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.35s ease-out forwards;
+}
+
+.stagger-1 { animation-delay: 0.05s; opacity: 0; }
+.stagger-2 { animation-delay: 0.1s; opacity: 0; }
+.stagger-3 { animation-delay: 0.15s; opacity: 0; }
+.stagger-4 { animation-delay: 0.2s; opacity: 0; }
+
+@keyframes bubbleFloat1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(60px, -80px) scale(1.1); }
+  50% { transform: translate(-40px, -140px) scale(0.95); }
+  75% { transform: translate(80px, -60px) scale(1.05); }
+}
+
+@keyframes bubbleFloat2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(-70px, -60px) scale(1.08); }
+  50% { transform: translate(50px, -120px) scale(0.92); }
+  75% { transform: translate(-30px, -80px) scale(1.03); }
+}
+
+@keyframes bubbleFloat3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(90px, -100px) scale(1.12); }
+  66% { transform: translate(-60px, -70px) scale(0.9); }
+}
+
+@keyframes bubbleFloat4 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  20% { transform: translate(-50px, -90px) scale(1.06); }
+  40% { transform: translate(70px, -50px) scale(0.94); }
+  60% { transform: translate(-80px, -130px) scale(1.08); }
+  80% { transform: translate(40px, -70px) scale(0.97); }
+}
+
+@keyframes bubbleFloat5 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(40px, -110px) scale(1.1); }
+  50% { transform: translate(-60px, -60px) scale(0.88); }
+  75% { transform: translate(20px, -140px) scale(1.04); }
+}
+
+@keyframes bubblePulse {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes rotateGradient {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
