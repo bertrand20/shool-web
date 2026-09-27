@@ -23,14 +23,14 @@ exports.login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: admin.id, username: admin.username, full_name: admin.full_name },
+      { id: admin.id, username: admin.username, full_name: admin.full_name, role: admin.role },
       JWT_SECRET,
       { expiresIn: '24h' }
     );
 
     res.json({
       token,
-      admin: { id: admin.id, username: admin.username, full_name: admin.full_name },
+      admin: { id: admin.id, username: admin.username, full_name: admin.full_name, role: admin.role },
     });
   } catch (err) {
     console.error('Admin login error:', err);

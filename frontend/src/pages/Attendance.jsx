@@ -6,6 +6,7 @@ import EmptyState from '../components/EmptyState'
 import { useI18n } from '../i18n/context'
 
 const API = '/api'
+const authHeaders = () => ({ Authorization: `Bearer ${localStorage.getItem('admin_token')}` })
 
 const statusOptions = [
   { value: 'Present', label: 'Present', icon: Check, color: 'bg-emerald-100 text-emerald-700 border-emerald-300 hover:bg-emerald-200' },
@@ -29,7 +30,7 @@ export default function Attendance() {
 
   const fetchClasses = async () => {
     try {
-      const res = await fetch(`${API}/classes`)
+      const res = await fetch(`${API}/classes`, { headers: authHeaders() })
       if (res.ok) setClasses(await res.json())
     } catch {
       // classes fetch is non-critical
@@ -43,13 +44,13 @@ export default function Attendance() {
       const params = new URLSearchParams({ status: 'Active', limit: 100 })
       if (selectedClass) params.append('class_id', selectedClass)
 
-      const res = await fetch(`${API}/students?${params}`)
+      const res = await fetch(`${API}/students?${params}`, { headers: authHeaders() })
       if (!res.ok) throw new Error(t('failedToLoadStudents'))
 
       const data = await res.json()
       setStudents(data.students)
 
-      const existingRes = await fetch(`${API}/attendance?date=${date}${selectedClass ? `&class_id=${selectedClass}` : ''}`)
+      const existingRes = await fetch(`${API}/attendance?date=${date}${selectedClass ? `&class_id=${selectedClass}` : ''}`, { headers: authHeaders() })
       const existingData = existingRes.ok ? await existingRes.json() : { records: [] }
 
       const existingMap = {}
@@ -71,7 +72,7 @@ export default function Attendance() {
 
   const fetchSummary = async () => {
     try {
-      const res = await fetch(`${API}/attendance/summary${selectedClass ? `?class_id=${selectedClass}` : ''}`)
+      const res = await fetch(`${API}/attendance/summary${selectedClass ? `?class_id=${selectedClass}` : ''}`, { headers: authHeaders() })
       if (res.ok) setSummary(await res.json())
     } catch {
       // summary is non-critical
@@ -111,7 +112,7 @@ export default function Attendance() {
 
       const res = await fetch(`${API}/attendance`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...authHeaders() },
         body: JSON.stringify(payload),
       })
 

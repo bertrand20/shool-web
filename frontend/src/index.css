@@ -1,26 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --color-school-primary: #1e40af;
-  --color-school-primary-light: #3b82f6;
-  --color-school-primary-dark: #1e3a8a;
-  --color-school-accent: #f59e0b;
-  --color-school-accent-light: #fbbf24;
-  --color-school-surface: #f8fafc;
-  --color-school-border: #e2e8f0;
-  --color-school-text: #1e293b;
-  --color-school-muted: #64748b;
+  --color-school-primary: #17324d;
+  --color-school-primary-light: #315b7d;
+  --color-school-primary-dark: #0d2236;
+  --color-school-accent: #b28a3b;
+  --color-school-accent-light: #d5b66a;
+  --color-school-burgundy: #7b2636;
+  --color-school-surface: #f6f4ef;
+  --color-school-border: #ddd9cf;
+  --color-school-text: #1d2933;
+  --color-school-muted: #68737b;
   --color-school-success: #059669;
   --color-school-danger: #dc2626;
   --color-school-warning: #d97706;
-  --font-family-heading: "Inter", system-ui, sans-serif;
-  --font-family-body: "Inter", system-ui, sans-serif;
+  --font-family-heading: "Libre Baskerville", Georgia, serif;
+  --font-family-body: "DM Sans", "Segoe UI", sans-serif;
+}
+
+:root {
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
 }
 
 body {
   font-family: var(--font-family-body);
   color: var(--color-school-text);
   background: var(--color-school-surface);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.admin-shell {
+  background: var(--color-school-surface);
+  color: var(--color-school-text);
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+.admin-dark {
+  --color-school-surface: #111b25;
+  --color-school-border: #2b3a48;
+  --color-school-text: #e8edf1;
+  --color-school-muted: #a9b5bf;
+  background: #111b25;
+  color: #e8edf1;
+}
+
+.admin-dark .bg-white,
+.admin-dark .panel-card {
+  background-color: #1a2733;
+  border-color: #2b3a48;
+  color: #e8edf1;
+}
+
+.admin-dark .bg-gray-50,
+.admin-dark .bg-gray-100,
+.admin-dark .bg-school-surface {
+  background-color: #15222d;
+}
+
+.admin-dark .text-gray-900,
+.admin-dark .text-gray-800,
+.admin-dark .text-school-text {
+  color: #e8edf1;
+}
+
+.admin-dark .text-gray-600,
+.admin-dark .text-gray-500,
+.admin-dark .text-school-muted {
+  color: #a9b5bf;
+}
+
+.admin-dark input,
+.admin-dark select,
+.admin-dark textarea {
+  background-color: #15222d;
+  border-color: #3a4b59;
+  color: #e8edf1;
+}
+
+.admin-dark input::placeholder,
+.admin-dark textarea::placeholder {
+  color: #82919d;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-family-heading);
+  letter-spacing: 0;
+}
+
+::selection {
+  background: #d5b66a;
+  color: #17324d;
+}
+
+.public-shell {
+  background: #f6f4ef;
+}
+
+.public-link-underline {
+  position: relative;
+}
+
+.public-link-underline::after {
+  background: #b28a3b;
+  bottom: -0.4rem;
+  content: "";
+  height: 2px;
+  left: 0;
+  position: absolute;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 180ms ease;
+  width: 100%;
+}
+
+.public-link-underline:hover::after,
+.public-link-underline[aria-current="page"]::after {
+  transform: scaleX(1);
 }
 
 .btn-primary {
@@ -49,7 +147,7 @@ body {
 }
 
 .panel-card {
-  @apply bg-white rounded-xl border border-school-border p-6
+  @apply bg-white rounded-lg border border-school-border p-6
     shadow-sm;
 }
 

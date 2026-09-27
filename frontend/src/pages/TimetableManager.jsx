@@ -85,8 +85,8 @@ export default function TimetableManager() {
   return (
     <div>
       <div className="page-header">
-        <h1 className="page-title text-white">{t('timetable')}</h1>
-        <p className="page-subtitle text-emerald-100">{t('timetable.subtitle')}</p>
+        <h1 className="page-title">{t('timetable')}</h1>
+        <p className="page-subtitle">{t('timetable.subtitle')}</p>
       </div>
 
       {msg && (
@@ -97,15 +97,15 @@ export default function TimetableManager() {
 
       {summary && (
         <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-white"><p className="text-2xl font-bold">{summary.total_entries}</p><p className="text-xs text-emerald-100">{t('timetable.totalPeriods')}</p></div>
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-white"><p className="text-2xl font-bold">{summary.classes_scheduled}</p><p className="text-xs text-emerald-100">{t('timetable.classesScheduled')}</p></div>
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-white"><p className="text-2xl font-bold">{summary.teachers_allocated}</p><p className="text-xs text-emerald-100">{t('timetable.teachersAllocated')}</p></div>
+          <div className="panel-card"><p className="text-2xl font-bold">{summary.total_entries}</p><p className="text-xs text-school-muted">{t('timetable.totalPeriods')}</p></div>
+          <div className="panel-card"><p className="text-2xl font-bold">{summary.classes_scheduled}</p><p className="text-xs text-school-muted">{t('timetable.classesScheduled')}</p></div>
+          <div className="panel-card"><p className="text-2xl font-bold">{summary.teachers_allocated}</p><p className="text-xs text-school-muted">{t('timetable.teachersAllocated')}</p></div>
         </div>
       )}
 
       <div className="flex flex-wrap items-center gap-3 mb-4">
-        <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-xl px-3 py-2 text-white">
-          <CalendarClock size={16} className="text-emerald-100" />
+        <div className="flex items-center gap-2 bg-white rounded-xl px-3 py-2 text-school-text border border-school-border">
+          <CalendarClock size={16} className="text-school-accent" />
           <select value={selectedClass} onChange={e => setSelectedClass(e.target.value)} className="bg-transparent text-sm outline-none">
             <option value="" className="text-gray-800">{t('common.allClasses')}</option>
             {classes.map(c => <option key={c.id} value={c.id} className="text-gray-800">{c.name} {c.section}</option>)}
@@ -117,7 +117,7 @@ export default function TimetableManager() {
       </div>
 
       {showForm && (
-        <form onSubmit={handleSave} className="bg-white/10 backdrop-blur-sm rounded-xl p-4 mb-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <form onSubmit={handleSave} className="panel-card mb-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
           <select value={form.class_id} onChange={e => setForm({ ...form, class_id: e.target.value })} className="select-field text-sm" required>
             <option value="">{t('common.class')}</option>
             {classes.map(c => <option key={c.id} value={c.id}>{c.name} {c.section}</option>)}

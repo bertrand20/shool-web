@@ -8,6 +8,7 @@ import ErrorMessage from '../components/ErrorMessage'
 import EmptyState from '../components/EmptyState'
 
 const API = '/api'
+const authHeaders = () => ({ Authorization: `Bearer ${localStorage.getItem('admin_token')}` })
 
 const TAB_LABEL_KEYS = { overview: 'overview', balances: 'billing.tabBalances', 'fee structure': 'billing.tabFeeStructure' }
 
@@ -27,10 +28,10 @@ export default function Billing() {
     setError(null)
     try {
       const [revRes, outRes, feesRes, stuRes] = await Promise.all([
-        fetch(`${API}/revenue`),
-        fetch(`${API}/outstanding`),
-        fetch(`${API}/fees`),
-        fetch(`${API}/students?status=Active&limit=200`),
+        fetch(`${API}/revenue`, { headers: authHeaders() }),
+        fetch(`${API}/outstanding`, { headers: authHeaders() }),
+        fetch(`${API}/fees`, { headers: authHeaders() }),
+        fetch(`${API}/students?status=Active&limit=200`, { headers: authHeaders() }),
       ])
 
       if (!revRes.ok) throw new Error(t('billing.loadFailed'))
@@ -56,7 +57,7 @@ export default function Billing() {
   const handleRecordPayment = async (formData) => {
     const res = await fetch(`${API}/payments`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', ...authHeaders() },
       body: JSON.stringify(formData),
     })
 

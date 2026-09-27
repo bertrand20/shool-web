@@ -56,8 +56,8 @@ export default function BehaviorManager() {
   return (
     <div>
       <div className="page-header">
-        <h1 className="page-title text-white">Behavior & Discipline</h1>
-        <p className="page-subtitle text-emerald-100">Track commendations, warnings, and incidents per student</p>
+        <h1 className="page-title">Behavior & Discipline</h1>
+        <p className="page-subtitle">Track commendations, warnings, and incidents per student</p>
       </div>
 
       {msg && (
@@ -67,16 +67,16 @@ export default function BehaviorManager() {
       )}
 
       <div className="flex flex-wrap items-center gap-3 mb-4">
-        <div className="flex gap-1 bg-white/10 backdrop-blur-sm rounded-xl p-1 overflow-x-auto">
+        <div className="flex gap-1 bg-white rounded-xl p-1 border border-school-border overflow-x-auto">
           {[{ id: '', label: 'All' }, { id: 'Commendation', label: 'Commendations' }, { id: 'Warning', label: 'Warnings' }, { id: 'Incident', label: 'Incidents' }, { id: 'Suspension', label: 'Suspensions' }].map(f => (
-            <button key={f.id} onClick={() => setFilter(f.id)} className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${filter === f.id ? 'bg-white text-emerald-700' : 'text-white/70 hover:text-white'}`}>{f.label}</button>
+            <button key={f.id} onClick={() => setFilter(f.id)} className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${filter === f.id ? 'bg-school-primary text-white' : 'text-school-muted hover:text-school-primary'}`}>{f.label}</button>
           ))}
         </div>
         <button onClick={() => setShowForm(true)} className="btn-primary btn-sm bg-white text-emerald-700 hover:bg-white/90"><Plus size={14} className="mr-1 inline" /> Log Entry</button>
       </div>
 
       {showForm && (
-        <form onSubmit={handleCreate} className="bg-white/10 backdrop-blur-sm rounded-xl p-4 mb-6 grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <form onSubmit={handleCreate} className="panel-card mb-6 grid grid-cols-2 sm:grid-cols-3 gap-3">
           <select value={form.student_id} onChange={e => setForm({ ...form, student_id: e.target.value })} className="select-field text-sm" required>
             <option value="">Student</option>
             {students.map(s => <option key={s.id} value={s.id}>{s.first_name} {s.last_name}</option>)}
@@ -94,18 +94,18 @@ export default function BehaviorManager() {
         </form>
       )}
 
-      <div className="bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden">
-        {filtered.length === 0 && <p className="p-6 text-center text-sm text-emerald-100/60">No behavior entries found</p>}
+      <div className="panel-card p-0 overflow-hidden">
+        {filtered.length === 0 && <p className="p-6 text-center text-sm text-school-muted">No behavior entries found</p>}
         {filtered.map(l => (
-          <div key={l.id} className="px-4 py-3 border-b border-white/10 last:border-0 flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-white/15 flex items-center justify-center shrink-0"><ClipboardList size={16} className="text-white" /></div>
+          <div key={l.id} className="px-4 py-3 border-b border-school-border last:border-0 flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg bg-school-surface flex items-center justify-center shrink-0"><ClipboardList size={16} className="text-school-primary" /></div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
-                <p className="text-sm font-semibold text-white truncate">{l.title}</p>
+                <p className="text-sm font-semibold text-school-text truncate">{l.title}</p>
                 <span className={`text-[10px] px-2 py-0.5 rounded-full ${typeColor(l.entry_type)}`}>{l.entry_type}</span>
               </div>
-              <p className="text-xs text-emerald-100/70 truncate">{l.student_name} · {l.class_name} {l.section} · {l.entry_date} · by {l.recorded_by}</p>
-              {l.description && <p className="text-xs text-emerald-100/50 mt-0.5 truncate">{l.description}</p>}
+              <p className="text-xs text-school-muted truncate">{l.student_name} · {l.class_name} {l.section} · {l.entry_date} · by {l.recorded_by}</p>
+              {l.description && <p className="text-xs text-school-muted mt-0.5 truncate">{l.description}</p>}
             </div>
             <button onClick={() => handleDelete(l.id)} className="p-1 hover:bg-white/15 rounded text-red-300"><Trash2 size={13} /></button>
           </div>

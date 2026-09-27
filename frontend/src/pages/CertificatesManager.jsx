@@ -122,8 +122,8 @@ export default function CertificatesManager() {
     (async () => {
       try {
         const [s, e] = await Promise.all([
-          fetch(API + '/students?limit=300').then(r => r.json()),
-          fetch(API + '/exams').then(r => r.json()),
+          fetch(API + '/students?limit=300', { headers: authHeaders }).then(r => r.json()),
+          fetch(API + '/exams', { headers: authHeaders }).then(r => r.json()),
         ])
         setStudents(Array.isArray(s) ? s : s.students || [])
         setExams(e)
@@ -149,8 +149,8 @@ export default function CertificatesManager() {
   return (
     <div>
       <div className="page-header">
-        <h1 className="page-title text-white">{t('certificates')}</h1>
-        <p className="page-subtitle text-emerald-100">{t('certificates.subtitle')}</p>
+        <h1 className="page-title">{t('certificates')}</h1>
+        <p className="page-subtitle">{t('certificates.subtitle')}</p>
       </div>
 
       {msg && (
@@ -159,14 +159,14 @@ export default function CertificatesManager() {
         </div>
       )}
 
-      <div className="flex gap-1 bg-white/10 backdrop-blur-sm rounded-xl p-1 mb-6 w-fit">
-        <button onClick={() => { setTab('transfer'); setCert(null) }} className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${tab === 'transfer' ? 'bg-white text-emerald-700' : 'text-white/70 hover:text-white'}`}><Award size={15} /> {t('certificates.transfer')}</button>
-        <button onClick={() => { setTab('report'); setCert(null) }} className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${tab === 'report' ? 'bg-white text-emerald-700' : 'text-white/70 hover:text-white'}`}><FileText size={15} /> {t('reportCard')}</button>
+      <div className="flex gap-1 bg-white rounded-xl p-1 mb-6 w-fit border border-school-border">
+        <button onClick={() => { setTab('transfer'); setCert(null) }} className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${tab === 'transfer' ? 'bg-school-primary text-white' : 'text-school-muted hover:text-school-primary'}`}><Award size={15} /> {t('certificates.transfer')}</button>
+        <button onClick={() => { setTab('report'); setCert(null) }} className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${tab === 'report' ? 'bg-school-primary text-white' : 'text-school-muted hover:text-school-primary'}`}><FileText size={15} /> {t('reportCard')}</button>
       </div>
 
-      <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 mb-6 flex flex-wrap items-end gap-3">
+      <div className="panel-card mb-6 flex flex-wrap items-end gap-3">
         <div>
-          <label className="block text-xs text-emerald-100 mb-1">{t('student')}</label>
+          <label className="block text-xs text-school-muted mb-1">{t('student')}</label>
           <select value={selectedStudent} onChange={e => { setSelectedStudent(e.target.value); setCert(null) }} className="select-field text-sm w-64">
             <option value="">{t('common.selectStudent')}</option>
             {students.map(s => <option key={s.id} value={s.id}>{s.first_name} {s.last_name}</option>)}
@@ -174,7 +174,7 @@ export default function CertificatesManager() {
         </div>
         {tab === 'report' && (
           <div>
-            <label className="block text-xs text-emerald-100 mb-1">{t('common.exam')}</label>
+            <label className="block text-xs text-school-muted mb-1">{t('common.exam')}</label>
             <select value={selectedExam} onChange={e => { setSelectedExam(e.target.value); setCert(null) }} className="select-field text-sm w-64">
               <option value="">{t('common.selectExam')}</option>
               {exams.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}

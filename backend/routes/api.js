@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { adminAuth } = require('../middleware/auth');
+const { requirePermission, requireRoles, authorizeOperational } = require('../middleware/rbac');
 const studentController = require('../controllers/studentController');
 const attendanceController = require('../controllers/attendanceController');
 const financeController = require('../controllers/financeController');
@@ -25,16 +26,25 @@ const behaviorController = require('../controllers/behaviorController');
 const inventoryController = require('../controllers/inventoryController');
 const auditController = require('../controllers/auditController');
 const certificatesController = require('../controllers/certificatesController');
+const contactController = require('../controllers/contactController');
 
 // Public portal routes
 router.get('/portal/announcements', portalController.getAnnouncements);
 router.get('/portal/gallery', portalController.getGallery);
 router.get('/portal/school-info', portalController.getSchoolInfo);
-router.get('/portal/stats', portalController.getStats);
 router.post('/portal/register', publicRegistrationController.publicRegister);
-router.get('/portal/search-student', portalController.searchStudent);
-router.get('/portal/fees/:studentId', portalController.getStudentFees);
-router.post('/portal/pay', portalController.submitPayment);
+router.post('/portal/contact', contactController.createMessage);
+router.get('/portal/stats', adminAuth, requirePermission('students:read'), portalController.getStats);
+router.get('/portal/search-student', adminAuth, requirePermission('students:read'), portalController.searchStudent);
+router.get('/portal/fees/:studentId', adminAuth, requirePermission('finance:read'), portalController.getStudentFees);
+router.post('/portal/pay', adminAuth, requirePermission('finance:write'), portalController.submitPayment);
+
+// Deliberately limited public website API. Private school-management data is not exposed here.
+router.get('/public/school-info', portalController.getSchoolInfo);
+router.get('/public/news', portalController.getAnnouncements);
+router.get('/public/events', eventsController.getEvents);
+router.get('/public/gallery', portalController.getGallery);
+router.get('/public/:section(academics|admissions|student-life|achievements|staff|alumni)', portalController.getPublicContent);
 
 // Admin auth
 router.post('/admin/login', adminController.login);
@@ -43,22 +53,27 @@ router.post('/admin/reset-password', adminController.resetPassword);
 router.post('/admin/change-password', adminAuth, adminController.changePassword);
 
 // Admin content management
-router.get('/admin/announcements', adminAuth, adminContentController.getAllAnnouncements);
-router.post('/admin/announcements', adminAuth, adminContentController.createAnnouncement);
-router.put('/admin/announcements/:id', adminAuth, adminContentController.updateAnnouncement);
-router.delete('/admin/announcements/:id', adminAuth, adminContentController.deleteAnnouncement);
+router.get('/admin/announcements', adminAuth, requirePermission('content:read'), adminContentController.getAllAnnouncements);
+router.post('/admin/announcements', adminAuth, requirePermission('content:write'), adminContentController.createAnnouncement);
+router.put('/admin/announcements/:id', adminAuth, requirePermission('content:write'), adminContentController.updateAnnouncement);
+router.delete('/admin/announcements/:id', adminAuth, requirePermission('content:write'), adminContentController.deleteAnnouncement);
 
-router.get('/admin/gallery', adminAuth, adminContentController.getAllGallery);
-router.post('/admin/gallery', adminAuth, adminContentController.createGalleryItem);
-router.delete('/admin/gallery/:id', adminAuth, adminContentController.deleteGalleryItem);
+router.get('/admin/gallery', adminAuth, requirePermission('content:read'), adminContentController.getAllGallery);
+router.post('/admin/gallery', adminAuth, requirePermission('content:write'), adminContentController.createGalleryItem);
+router.delete('/admin/gallery/:id', adminAuth, requirePermission('content:write'), adminContentController.deleteGalleryItem);
 
-router.get('/admin/school-info', adminAuth, adminContentController.getSchoolInfo);
-router.put('/admin/school-info', adminAuth, adminContentController.updateSchoolInfo);
+router.get('/admin/school-info', adminAuth, requirePermission('content:read'), adminContentController.getSchoolInfo);
+router.put('/admin/school-info', adminAuth, requirePermission('content:write'), adminContentController.updateSchoolInfo);
+router.get('/admin/contact-messages', adminAuth, requireRoles('SUPER_ADMIN', 'SCHOOL_ADMIN'), contactController.getMessages);
+router.patch('/admin/contact-messages/:id', adminAuth, requireRoles('SUPER_ADMIN', 'SCHOOL_ADMIN'), contactController.updateMessageStatus);
 
 // Admin payment management
-router.get('/admin/payments', adminAuth, portalController.adminGetAllPayments);
-router.put('/admin/payments/:id', adminAuth, portalController.adminUpdatePayment);
-router.delete('/admin/payments/:id', adminAuth, portalController.adminDeletePayment);
+router.get('/admin/payments', adminAuth, requirePermission('finance:read'), portalController.adminGetAllPayments);
+router.put('/admin/payments/:id', adminAuth, requirePermission('finance:write'), portalController.adminUpdatePayment);
+router.delete('/admin/payments/:id', adminAuth, requirePermission('finance:write'), portalController.adminDeletePayment);
+
+// Every operational route below this point requires a valid role and permission.
+router.use(adminAuth, authorizeOperational);
 
 // Students
 router.get('/students', studentController.getAllStudents);

@@ -17,12 +17,13 @@ export default function Dashboard() {
     setLoading(true)
     setError(null)
     try {
+      const headers = { Authorization: `Bearer ${localStorage.getItem('admin_token')}` }
       const [studentsRes, revenueRes, attendanceRes, staffRes, parentsRes] = await Promise.all([
-        fetch(`${API}/students?limit=1`),
-        fetch(`${API}/revenue`),
-        fetch(`${API}/attendance/summary`),
-        fetch(`${API}/staff/stats`),
-        fetch(`${API}/parents?limit=1`),
+        fetch(`${API}/students?limit=1`, { headers }),
+        fetch(`${API}/revenue`, { headers }),
+        fetch(`${API}/attendance/summary`, { headers }),
+        fetch(`${API}/staff/stats`, { headers }),
+        fetch(`${API}/parents?limit=1`, { headers }),
       ])
 
       if (!studentsRes.ok || !revenueRes.ok) {
@@ -71,8 +72,8 @@ export default function Dashboard() {
   return (
     <div>
       <div className="page-header">
-        <h1 className="page-title text-white">{t('dashboard')}</h1>
-        <p className="page-subtitle text-emerald-100">{t('overviewOfSchool')}</p>
+        <h1 className="page-title text-school-primary">{t('dashboard')}</h1>
+        <p className="page-subtitle text-school-muted">{t('overviewOfSchool')}</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4 mb-8">

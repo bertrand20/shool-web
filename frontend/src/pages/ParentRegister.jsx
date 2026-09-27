@@ -27,11 +27,15 @@ export default function ParentRegister() {
     student_email: '',
     student_phone: '',
     student_date_of_birth: '',
+    student_age: '',
     student_gender: '',
     class_id: '',
     guardian_name: '',
     guardian_phone: '',
     student_address: '',
+    district: '', sector: '', cell: '', village: '',
+    mother_name: '', mother_phone: '', father_name: '', father_phone: '',
+    emergency_contact_name: '', emergency_contact_phone: '', previous_school: '', medical_information: '',
   })
 
   useEffect(() => {
@@ -94,7 +98,10 @@ export default function ParentRegister() {
                   parent_occupation: '', parent_relationship: 'Father', parent_address: '',
                   student_first_name: '', student_last_name: '', student_email: '', student_phone: '',
                   student_date_of_birth: '', student_gender: '', class_id: '',
-                  guardian_name: '', guardian_phone: '', student_address: '',
+                  guardian_name: '', guardian_phone: '', student_address: '', student_age: '',
+                  district: '', sector: '', cell: '', village: '', mother_name: '', mother_phone: '',
+                  father_name: '', father_phone: '', emergency_contact_name: '', emergency_contact_phone: '',
+                  previous_school: '', medical_information: '',
                 })
               }}
               className="inline-flex items-center gap-2 border border-gray-200 text-gray-700 px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-gray-50 transition-colors"
@@ -254,7 +261,39 @@ export default function ParentRegister() {
                   ))}
                 </select>
               </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1">Age</label>
+                <input type="number" min="3" max="25" required value={form.student_age} onChange={(e) => update('student_age', e.target.value)} className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg" />
+              </div>
             </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-gray-800 mb-3">Home address</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {['district', 'sector', 'cell', 'village'].map((field) => (
+                  <div key={field}>
+                    <label className="block text-xs font-medium text-gray-500 mb-1">{field[0].toUpperCase() + field.slice(1)}</label>
+                    <input type="text" required value={form[field]} onChange={(e) => update(field, e.target.value)} className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg" />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-gray-800 mb-3">Parent information</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {[['mother_name', 'Mother name'], ['mother_phone', 'Mother phone'], ['father_name', 'Father name'], ['father_phone', 'Father phone']].map(([field, label]) => (
+                  <div key={field}><label className="block text-xs font-medium text-gray-500 mb-1">{label}</label><input type={field.endsWith('phone') ? 'tel' : 'text'} required value={form[field]} onChange={(e) => update(field, e.target.value)} className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg" /></div>
+                ))}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div><label className="block text-xs font-medium text-gray-500 mb-1">Emergency contact name</label><input type="text" value={form.emergency_contact_name} onChange={(e) => update('emergency_contact_name', e.target.value)} className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg" /></div>
+              <div><label className="block text-xs font-medium text-gray-500 mb-1">Emergency contact phone</label><input type="tel" value={form.emergency_contact_phone} onChange={(e) => update('emergency_contact_phone', e.target.value)} className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg" /></div>
+            </div>
+            <div><label className="block text-xs font-medium text-gray-500 mb-1">Previous school</label><input type="text" value={form.previous_school} onChange={(e) => update('previous_school', e.target.value)} className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg" /></div>
+            <div><label className="block text-xs font-medium text-gray-500 mb-1">Medical information or special needs</label><textarea rows={2} value={form.medical_information} onChange={(e) => update('medical_information', e.target.value)} className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg resize-none" /></div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>

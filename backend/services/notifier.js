@@ -67,7 +67,7 @@ async function sendNotification({ recipientType = 'parent', recipientId, subject
     let status = 'logged';
     if (transporter && to && channel === 'email') {
       try {
-        await transporter.sendMail({ from: process.env.SMTP_FROM || 'no-reply@greenfieldacademy.edu', to, subject, html: `<p>${body}</p>` });
+        await transporter.sendMail({ from: process.env.SMTP_FROM || 'no-reply@school.local', to, subject, html: `<p>${body}</p>` });
         status = 'sent';
       } catch {
         status = 'failed';

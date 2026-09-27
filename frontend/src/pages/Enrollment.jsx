@@ -7,6 +7,7 @@ import ErrorMessage from '../components/ErrorMessage'
 import { useI18n } from '../i18n/context'
 
 const API = '/api'
+const authHeaders = () => ({ Authorization: `Bearer ${localStorage.getItem('admin_token')}` })
 
 export default function Enrollment() {
   const { t } = useI18n()
@@ -26,7 +27,7 @@ export default function Enrollment() {
       const params = new URLSearchParams({ page, limit: 20 })
       if (term) params.append('search', term)
 
-      const res = await fetch(`${API}/students?${params}`)
+      const res = await fetch(`${API}/students?${params}`, { headers: authHeaders() })
       if (!res.ok) throw new Error(t('enrollment.loadFailed'))
 
       const data = await res.json()
@@ -41,7 +42,7 @@ export default function Enrollment() {
 
   const fetchClasses = async () => {
     try {
-      const res = await fetch(`${API}/classes`)
+      const res = await fetch(`${API}/classes`, { headers: authHeaders() })
       if (res.ok) setClasses(await res.json())
     } catch {
       // classes fetch is non-critical
@@ -68,7 +69,7 @@ export default function Enrollment() {
 
     const res = await fetch(url, {
       method,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', ...authHeaders() },
       body: JSON.stringify(formData),
     })
 

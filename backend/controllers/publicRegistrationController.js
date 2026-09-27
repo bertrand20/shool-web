@@ -4,10 +4,10 @@ exports.publicRegister = async (req, res) => {
   try {
     const {
       parent_first_name, parent_last_name, parent_email, parent_phone,
-      parent_occupation, parent_relationship, parent_address,
-      student_first_name, student_last_name, student_email, student_phone,
-      student_date_of_birth, student_gender, class_id,
-      guardian_name, guardian_phone, student_address,
+      parent_relationship, student_first_name, student_last_name, student_email,
+      student_date_of_birth, student_gender, student_age, district, sector, cell, village,
+      mother_name, mother_phone, father_name, father_phone, emergency_contact_name,
+      emergency_contact_phone, previous_school, medical_information,
     } = req.body;
 
     if (!parent_first_name || !parent_last_name || !parent_email || !parent_phone) {
@@ -17,48 +17,27 @@ exports.publicRegister = async (req, res) => {
       return res.status(400).json({ error: 'Student name and gender are required' });
     }
 
-    let parent_id;
-
-    const [existingParent] = await pool.query('SELECT id FROM parents WHERE email = ?', [parent_email]);
-
-    if (existingParent.length > 0) {
-      parent_id = existingParent[0].id;
-    } else {
-      const [parentResult] = await pool.query(
-        `INSERT INTO parents (first_name, last_name, email, phone, occupation, relationship, address)
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [
-          parent_first_name, parent_last_name, parent_email, parent_phone,
-          parent_occupation || null, parent_relationship || 'Father', parent_address || null,
-        ]
-      );
-      parent_id = parentResult.insertId;
-    }
-
-    const [studentResult] = await pool.query(
-      `INSERT INTO students (first_name, last_name, email, phone, date_of_birth, gender, class_id, parent_id, guardian_name, guardian_phone, address)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    const [result] = await pool.query(
+      `INSERT INTO admission_applications
+       (parent_first_name, parent_last_name, parent_email, parent_phone, parent_relationship,
+        student_first_name, student_last_name, student_email, student_date_of_birth, student_gender,
+        student_age, district, sector, cell, village, mother_name, mother_phone, father_name, father_phone,
+        emergency_contact_name, emergency_contact_phone, previous_school, medical_information)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)` ,
       [
-        student_first_name, student_last_name, student_email || null, student_phone || null,
-        student_date_of_birth || null, student_gender, class_id || null, parent_id,
-        guardian_name || `${parent_first_name} ${parent_last_name}`,
-        guardian_phone || parent_phone, student_address || parent_address || null,
+        parent_first_name.trim(), parent_last_name.trim(), parent_email.trim().toLowerCase(), parent_phone.trim(),
+        parent_relationship || null, student_first_name.trim(), student_last_name.trim(), student_email?.trim().toLowerCase() || null,
+        student_date_of_birth || null, student_gender, student_age || null,
+        district?.trim() || null, sector?.trim() || null, cell?.trim() || null, village?.trim() || null,
+        mother_name?.trim() || null, mother_phone?.trim() || null, father_name?.trim() || null,
+        father_phone?.trim() || null, emergency_contact_name?.trim() || null,
+        emergency_contact_phone?.trim() || null, previous_school?.trim() || null, medical_information?.trim() || null,
       ]
     );
 
-    const [newStudent] = await pool.query(
-      `SELECT s.*, c.name AS class_name, c.section AS class_section
-       FROM students s LEFT JOIN classes c ON s.class_id = c.id
-       WHERE s.id = ?`,
-      [studentResult.insertId]
-    );
-
-    const student = newStudent[0];
-
     res.status(201).json({
-      message: 'Student registered successfully',
-      student,
-      parent_id,
+      message: 'Your admission application has been received for review.',
+      application_id: result.insertId,
     });
   } catch (err) {
     console.error('publicRegister error:', err);

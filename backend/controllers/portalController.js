@@ -3,7 +3,7 @@ const pool = require('../config/database');
 exports.getAnnouncements = async (req, res) => {
   try {
     const [rows] = await pool.query(
-      'SELECT * FROM announcements WHERE is_published = 1 ORDER BY created_at DESC'
+      'SELECT id, title, content, image_url, priority, created_at FROM announcements WHERE is_published = 1 ORDER BY created_at DESC'
     );
     res.json(rows);
   } catch (err) {
@@ -15,7 +15,7 @@ exports.getAnnouncements = async (req, res) => {
 exports.getGallery = async (req, res) => {
   try {
     const { category } = req.query;
-    let query = 'SELECT * FROM gallery';
+    let query = 'SELECT id, title, image_url, category, description, created_at FROM gallery';
     const params = [];
 
     if (category) {
@@ -34,7 +34,7 @@ exports.getGallery = async (req, res) => {
 
 exports.getSchoolInfo = async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM school_info');
+    const [rows] = await pool.query('SELECT info_key, info_value FROM school_info');
     const info = {};
     rows.forEach((row) => {
       info[row.info_key] = row.info_value;
@@ -43,6 +43,26 @@ exports.getSchoolInfo = async (req, res) => {
   } catch (err) {
     console.error('getSchoolInfo error:', err);
     res.status(500).json({ error: 'Failed to fetch school info' });
+  }
+};
+
+exports.getPublicContent = async (req, res) => {
+  const allowedSections = ['academics', 'admissions', 'student-life', 'achievements', 'staff', 'alumni'];
+  const { section } = req.params;
+  if (!allowedSections.includes(section)) return res.status(404).json({ error: 'Public section not found' });
+
+  try {
+    const [rows] = await pool.query(
+      `SELECT id, section, title, description, image_url, content_date, is_demo, display_order
+       FROM public_content
+       WHERE section = ? AND is_published = 1
+       ORDER BY display_order ASC, created_at DESC`,
+      [section]
+    );
+    res.json({ items: rows, demo: rows.some((row) => row.is_demo === 1) });
+  } catch (err) {
+    console.error('getPublicContent error:', err);
+    res.status(500).json({ error: 'Failed to fetch public content' });
   }
 };
 

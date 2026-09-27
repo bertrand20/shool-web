@@ -8,6 +8,7 @@ import AddStaffModal from '../components/AddStaffModal'
 import { useI18n } from '../i18n/context'
 
 const API = '/api'
+const authHeaders = () => ({ Authorization: `Bearer ${localStorage.getItem('admin_token')}` })
 
 const roleIcon = {
   Teacher: GraduationCap,
@@ -54,7 +55,7 @@ export default function StaffManagement() {
       const params = new URLSearchParams({ page, limit: 20 })
       if (term) params.append('search', term)
       if (role) params.append('role', role)
-      const res = await fetch(`${API}/staff?${params}`)
+      const res = await fetch(`${API}/staff?${params}`, { headers: authHeaders() })
       if (!res.ok) throw new Error(t('couldNotLoadStaff'))
       const data = await res.json()
       setStaff(data.staff)
@@ -68,7 +69,7 @@ export default function StaffManagement() {
 
   const fetchStats = async () => {
     try {
-      const res = await fetch(`${API}/staff/stats`)
+      const res = await fetch(`${API}/staff/stats`, { headers: authHeaders() })
       if (res.ok) setStats(await res.json())
     } catch {
       // non-critical
@@ -77,7 +78,7 @@ export default function StaffManagement() {
 
   const fetchClasses = async () => {
     try {
-      const res = await fetch(`${API}/classes`)
+      const res = await fetch(`${API}/classes`, { headers: authHeaders() })
       if (res.ok) setClasses(await res.json())
     } catch {
       // non-critical
@@ -105,7 +106,7 @@ export default function StaffManagement() {
     const url = id ? `${API}/staff/${id}` : `${API}/staff`
     const res = await fetch(url, {
       method,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', ...authHeaders() },
       body: JSON.stringify(formData),
     })
     if (!res.ok) {
@@ -119,7 +120,7 @@ export default function StaffManagement() {
   const handleDelete = async (id) => {
     if (!confirm(t('staff.removeConfirm'))) return
     try {
-      const res = await fetch(`${API}/staff/${id}`, { method: 'DELETE' })
+      const res = await fetch(`${API}/staff/${id}`, { method: 'DELETE', headers: authHeaders() })
       if (res.ok) {
         fetchStaff(pagination.page)
         fetchStats()

@@ -7,6 +7,7 @@ import ParentRegistrationModal from '../components/ParentRegistrationModal'
 import { useI18n } from '../i18n/context'
 
 const API = '/api'
+const authHeaders = () => ({ Authorization: `Bearer ${localStorage.getItem('admin_token')}` })
 
 export default function Parents() {
   const { t } = useI18n()
@@ -28,7 +29,7 @@ export default function Parents() {
     try {
       const params = new URLSearchParams({ page, limit: 20 })
       if (term) params.append('search', term)
-      const res = await fetch(`${API}/parents?${params}`)
+      const res = await fetch(`${API}/parents?${params}`, { headers: authHeaders() })
       if (!res.ok) throw new Error(t('couldNotLoadParents'))
       const data = await res.json()
       setParents(data.parents)
@@ -42,7 +43,7 @@ export default function Parents() {
 
   const fetchClasses = async () => {
     try {
-      const res = await fetch(`${API}/classes`)
+      const res = await fetch(`${API}/classes`, { headers: authHeaders() })
       if (res.ok) setClasses(await res.json())
     } catch {
       // non-critical
@@ -52,7 +53,7 @@ export default function Parents() {
   const fetchChildren = async (parentId) => {
     setLoadingChildren(true)
     try {
-      const res = await fetch(`${API}/parents/${parentId}/children`)
+      const res = await fetch(`${API}/parents/${parentId}/children`, { headers: authHeaders() })
       if (res.ok) setChildren(await res.json())
     } catch {
       setChildren([])
@@ -77,7 +78,7 @@ export default function Parents() {
       const url = editId ? `${API}/parents/${editId}` : `${API}/parents`
       const res = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...authHeaders() },
         body: JSON.stringify(formData),
       })
       if (!res.ok) {
@@ -92,7 +93,7 @@ export default function Parents() {
     if (type === 'child') {
       const res = await fetch(`${API}/parents/${parentId}/register-child`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...authHeaders() },
         body: JSON.stringify(formData),
       })
       if (!res.ok) {

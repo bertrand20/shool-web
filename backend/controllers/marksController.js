@@ -149,6 +149,16 @@ exports.getReportCard = async (req, res) => {
       'FROM student_marks sm JOIN subjects s ON sm.subject_id = s.id ' +
       'WHERE sm.student_id = ? AND sm.exam_id = ? ORDER BY s.name', [studentId, examId]);
 
+    const [classAverages] = await pool.query(
+      `SELECT sm.student_id, ROUND((SUM(sm.marks) / NULLIF(SUM(sm.max_marks), 0)) * 100, 1) AS average
+       FROM student_marks sm
+       JOIN students st ON st.id = sm.student_id
+       WHERE sm.exam_id = ? AND st.class_id = ?
+       GROUP BY sm.student_id
+       ORDER BY average DESC`,
+      [examId, student.class_id]
+    );
+
     const totalMarks = marks.reduce((sum, m) => sum + parseFloat(m.marks), 0);
     const totalMax = marks.reduce((sum, m) => sum + parseFloat(m.max_marks), 0);
     const average = totalMax > 0 ? ((totalMarks / totalMax) * 100).toFixed(1) : 0;
@@ -163,12 +173,28 @@ exports.getReportCard = async (req, res) => {
     else if (avg >= 40) grade = 'C';
     else if (avg >= 30) grade = 'D';
 
-    res.json({ student, exam, marks, summary: { totalMarks, totalMax, average, grade } });
+    const currentAverage = parseFloat(average) || 0;
+    const position = classAverages.findIndex((row) => row.student_id === student.id) + 1;
+    res.json({
+      student,
+      exam,
+      marks,
+      schoolInfo: await getSchoolInfo(),
+      summary: { totalMarks, totalMax, average, grade, classPosition: position || null, classSize: classAverages.length },
+    });
   } catch (err) {
     console.error('getReportCard error:', err);
     res.status(500).json({ error: 'Failed to generate report card' });
   }
 };
+
+async function getSchoolInfo() {
+  const [rows] = await pool.query(
+    `SELECT info_key, info_value FROM school_info
+     WHERE info_key IN ('school_name', 'school_location', 'contact_address', 'contact_phone', 'contact_email', 'contact_hours', 'logo_url')`
+  );
+  return rows.reduce((info, row) => ({ ...info, [row.info_key]: row.info_value }), {});
+}
 
 exports.getReportCardByExamName = async (req, res) => {
   try {

@@ -8,8 +8,9 @@ import f from './translations-f'
 import g from './translations-g'
 import h from './translations-h'
 import components from './translations-components'
+import homepage from './translations-homepage'
 
-const groups = [base, a, b, c, d, e, f, g, h, components]
+const groups = [base, a, b, c, d, e, f, g, h, components, homepage]
 
 const translations = { en: {}, rw: {} }
 for (const group of groups) {

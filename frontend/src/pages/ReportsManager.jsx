@@ -24,8 +24,8 @@ export default function ReportsManager() {
     (async () => {
       try {
         const [cls, ex] = await Promise.all([
-          fetch(API + '/classes').then(r => r.json()),
-          fetch(API + '/exams').then(r => r.json()),
+          fetch(API + '/classes', { headers: authHeaders }).then(r => r.json()),
+          fetch(API + '/exams', { headers: authHeaders }).then(r => r.json()),
         ])
         setClasses(cls)
         setExams(ex)
@@ -119,8 +119,8 @@ export default function ReportsManager() {
   return (
     <div>
       <div className="page-header">
-        <h1 className="page-title text-white">{t('reportsExports')}</h1>
-        <p className="page-subtitle text-emerald-100">{t('reports.downloadCsvSubtitle')}</p>
+        <h1 className="page-title">{t('reportsExports')}</h1>
+        <p className="page-subtitle">{t('reports.downloadCsvSubtitle')}</p>
       </div>
 
       {msg && (
@@ -131,12 +131,12 @@ export default function ReportsManager() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {sections.map(s => (
-          <div key={s.title} className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+          <div key={s.title} className="panel-card">
             <div className="flex items-center gap-2 mb-2">
-              <s.icon size={18} className="text-white" />
-              <h3 className="text-white font-semibold text-sm">{s.title}</h3>
+              <s.icon size={18} className="text-school-accent" />
+              <h3 className="text-school-text font-semibold text-sm">{s.title}</h3>
             </div>
-            <p className="text-xs text-emerald-100/70 mb-4">{s.desc}</p>
+            <p className="text-xs text-school-muted mb-4">{s.desc}</p>
             <div className="space-y-3 mb-4">{s.fields}</div>
             <button onClick={s.action} disabled={loading} className="btn-primary btn-sm bg-white text-emerald-700 hover:bg-white/90">
               <Download size={14} className="mr-1 inline" /> {loading ? t('reports.exporting') : t('reports.downloadCsv')}
@@ -145,7 +145,7 @@ export default function ReportsManager() {
         ))}
       </div>
 
-      <div className="mt-6 flex items-center gap-2 text-xs text-emerald-100/60">
+      <div className="mt-6 flex items-center gap-2 text-xs text-school-muted">
         <FileSpreadsheet size={14} /> {t('reports.serverSideNote')}
       </div>
     </div>

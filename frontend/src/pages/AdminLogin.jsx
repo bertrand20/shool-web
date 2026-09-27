@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { School, LogIn, Eye, EyeOff, Loader2, ArrowLeft, CheckCircle, Users, GraduationCap, BookOpen, Shield } from 'lucide-react'
+import { School, LogIn, Eye, EyeOff, Loader2, ArrowLeft, CheckCircle, Shield } from 'lucide-react'
 import { useI18n } from '../i18n/context'
 
 const API = '/api'
@@ -191,121 +191,20 @@ export default function AdminLogin() {
   }
 
   return (
-    <div className="min-h-screen flex">
-      {/* Left Panel - Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-emerald-700 via-teal-700 to-cyan-700 relative overflow-hidden">
-        {/* Animated Bubbles */}
-        <div className="absolute inset-0">
-          <div
-            className="absolute rounded-full bg-white/10 blur-sm"
-            style={{ width: 120, height: 120, bottom: '5%', left: '10%', animation: 'bubbleFloat1 12s ease-in-out infinite' }}
-          />
-          <div
-            className="absolute rounded-full bg-white/8 blur-xs"
-            style={{ width: 80, height: 80, bottom: '25%', left: '30%', animation: 'bubbleFloat2 15s ease-in-out infinite' }}
-          />
-          <div
-            className="absolute rounded-full bg-white/12 blur-sm"
-            style={{ width: 160, height: 160, bottom: '10%', right: '15%', animation: 'bubbleFloat3 18s ease-in-out infinite' }}
-          />
-          <div
-            className="absolute rounded-full bg-white/6 blur-md"
-            style={{ width: 60, height: 60, bottom: '40%', left: '20%', animation: 'bubbleFloat4 20s ease-in-out infinite' }}
-          />
-          <div
-            className="absolute rounded-full bg-white/10 blur-sm"
-            style={{ width: 100, height: 100, bottom: '15%', right: '30%', animation: 'bubbleFloat5 14s ease-in-out infinite' }}
-          />
-          <div
-            className="absolute rounded-full bg-white/8 blur-xs"
-            style={{ width: 50, height: 50, bottom: '50%', left: '50%', animation: 'bubbleFloat1 16s ease-in-out infinite reverse' }}
-          />
-          <div
-            className="absolute rounded-full bg-white/15 blur-sm"
-            style={{ width: 140, height: 140, bottom: '35%', right: '5%', animation: 'bubbleFloat2 22s ease-in-out infinite' }}
-          />
-          <div
-            className="absolute rounded-full bg-white/6 blur-md"
-            style={{ width: 90, height: 90, bottom: '55%', left: '5%', animation: 'bubbleFloat3 17s ease-in-out infinite reverse' }}
-          />
-          <div
-            className="absolute rounded-full bg-white/10 blur-xs"
-            style={{ width: 70, height: 70, bottom: '60%', right: '25%', animation: 'bubbleFloat4 13s ease-in-out infinite' }}
-          />
-          <div
-            className="absolute rounded-full bg-white/8 blur-sm"
-            style={{ width: 110, height: 110, bottom: '45%', left: '40%', animation: 'bubbleFloat5 19s ease-in-out infinite reverse' }}
-          />
-          <div
-            className="absolute rounded-full bg-white/5 blur-lg"
-            style={{ width: 200, height: 200, bottom: '0%', left: '35%', animation: 'bubbleFloat1 25s ease-in-out infinite' }}
-          />
-          <div
-            className="absolute rounded-full bg-white/7 blur-md"
-            style={{ width: 130, height: 130, bottom: '20%', right: '10%', animation: 'bubbleFloat2 21s ease-in-out infinite reverse' }}
-          />
-          {/* Large slow background blobs */}
-          <div
-            className="absolute rounded-full bg-white/3 blur-3xl"
-            style={{ width: 350, height: 350, top: '10%', left: '5%', animation: 'bubbleFloat3 30s ease-in-out infinite' }}
-          />
-          <div
-            className="absolute rounded-full bg-white/4 blur-3xl"
-            style={{ width: 400, height: 400, bottom: '5%', right: '0%', animation: 'bubbleFloat4 35s ease-in-out infinite reverse' }}
-          />
-        </div>
-
-        <div className="relative z-10 flex flex-col justify-center px-12 xl:px-16 w-full">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-12 h-12 rounded-xl bg-white/15 backdrop-blur flex items-center justify-center border border-white/20">
-              <School size={26} className="text-white" />
-            </div>
-            <div>
-              <h1 className="font-bold text-xl text-white">{t('appName')}</h1>
-              <p className="text-emerald-200 text-xs">{t('adminLogin.schoolManagementSystem')}</p>
-            </div>
-          </div>
-
-          <h2 className="text-3xl xl:text-4xl font-bold text-white leading-tight mb-6">
-            {t('adminLogin.manageSchool')}<br />
-            <span className="text-emerald-200">{t('adminLogin.fromOnePlace')}</span>
-          </h2>
-
-          <p className="text-emerald-100/80 text-sm leading-relaxed mb-10 max-w-md">
-            {t('adminLogin.heroDescription')}
-          </p>
-
-          <div className="space-y-4">
-            {[
-              { icon: Users, text: t('manageStudents') },
-              { icon: GraduationCap, text: t('trackAttendance') },
-              { icon: BookOpen, text: t('handleBilling') },
-              { icon: Shield, text: t('secureAccess') },
-            ].map(({ icon: Icon, text }) => (
-              <div key={text} className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
-                  <Icon size={16} className="text-emerald-200" />
-                </div>
-                <span className="text-sm text-emerald-100">{text}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Right Panel - Login Form */}
-      <div className="flex-1 flex items-center justify-center p-6 sm:p-10 bg-gray-50">
+    <div className="min-h-screen flex bg-school-surface">
+      {/* Login Form */}
+      <div className="flex-1 flex items-center justify-center p-6 sm:p-10 bg-school-surface">
         <div className="w-full max-w-md">
-          {/* Mobile Logo */}
-          <div className="lg:hidden text-center mb-8">
-            <div className="w-14 h-14 rounded-2xl bg-emerald-600 flex items-center justify-center mx-auto mb-3 shadow-lg shadow-emerald-600/30">
+          {/* Title */}
+          <div className="text-center mb-8">
+            <div className="w-14 h-14 bg-school-primary flex items-center justify-center mx-auto mb-3 border-b-4 border-school-accent">
               <School size={28} className="text-white" />
             </div>
             <h1 className="text-xl font-bold text-gray-900">{t('appName')}</h1>
             <p className="text-sm text-gray-500 mt-0.5">{t('adminLogin.schoolManagementSystem')}</p>
           </div>
 
-          <div className="bg-white rounded-2xl p-7 sm:p-8 border border-gray-200 shadow-lg shadow-gray-200/50">
+          <div className="bg-white p-7 sm:p-9 border border-school-border shadow-sm">
             <div className="mb-6">
               <h2 className="text-xl font-bold text-gray-900">{t('welcomeBack')}</h2>
               <p className="text-sm text-gray-500 mt-1">{t('signInToDashboard')}</p>
@@ -326,7 +225,7 @@ export default function AdminLogin() {
                   required
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all bg-gray-50 focus:bg-white"
+                  className="w-full px-4 py-3 text-sm border border-school-border focus:outline-none focus:ring-2 focus:ring-school-accent/30 focus:border-school-primary transition-all bg-school-surface focus:bg-white"
                   placeholder={t('adminLogin.enterUsernamePlaceholder')}
                 />
               </div>
@@ -339,7 +238,7 @@ export default function AdminLogin() {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-4 py-3 pr-11 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all bg-gray-50 focus:bg-white"
+                    className="w-full px-4 py-3 pr-11 text-sm border border-school-border focus:outline-none focus:ring-2 focus:ring-school-accent/30 focus:border-school-primary transition-all bg-school-surface focus:bg-white"
                     placeholder={t('adminLogin.enterPasswordPlaceholder')}
                   />
                   <button
@@ -365,7 +264,7 @@ export default function AdminLogin() {
                 <button
                   type="button"
                   onClick={() => setForgotOpen(true)}
-                  className="text-sm text-emerald-600 hover:text-emerald-700 font-medium transition-colors"
+                  className="text-sm text-school-burgundy hover:text-school-primary font-medium transition-colors"
                 >
                   {t('forgotPassword')}
                 </button>
@@ -374,7 +273,7 @@ export default function AdminLogin() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 bg-emerald-600 text-white py-3 rounded-xl font-semibold text-sm hover:bg-emerald-700 transition-all disabled:opacity-50 shadow-lg shadow-emerald-600/25 hover:shadow-emerald-600/40"
+                className="w-full flex items-center justify-center gap-2 bg-school-primary text-white py-3 font-semibold text-sm hover:bg-school-primary-dark transition-colors disabled:opacity-50"
               >
                 {loading ? (
                   <><Loader2 size={18} className="animate-spin" /> {t('signingIn')}</>
@@ -385,15 +284,12 @@ export default function AdminLogin() {
             </form>
 
             <div className="mt-6 pt-5 border-t border-gray-100 text-center">
-              <a href="/" className="text-sm text-gray-400 hover:text-emerald-600 transition-colors">
+              <a href="/" className="text-sm text-school-muted hover:text-school-burgundy transition-colors">
                 &larr; {t('backToPublicSite')}
               </a>
             </div>
           </div>
 
-          <p className="text-center text-xs text-gray-400 mt-6">
-            {t('demoLabel')}: <span className="font-mono bg-gray-100 px-1.5 py-0.5 rounded">admin</span> / <span className="font-mono bg-gray-100 px-1.5 py-0.5 rounded">admin123</span>
-          </p>
         </div>
       </div>
 

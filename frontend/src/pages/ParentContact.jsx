@@ -7,8 +7,10 @@ const API = '/api'
 export default function ParentContact() {
   const { t } = useI18n()
   const [schoolInfo, setSchoolInfo] = useState({})
-  const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' })
+  const [formData, setFormData] = useState({ name: '', email: '', phone: '', subject: '', message: '' })
   const [sent, setSent] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState('')
 
   useEffect(() => {
     fetch(`${API}/portal/school-info`)
@@ -17,11 +19,25 @@ export default function ParentContact() {
       .catch(() => {})
   }, [])
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    setSent(true)
-    setFormData({ name: '', email: '', subject: '', message: '' })
-    setTimeout(() => setSent(false), 4000)
+    setSubmitting(true)
+    setSubmitError('')
+    try {
+      const response = await fetch(`${API}/portal/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      })
+      const result = await response.json()
+      if (!response.ok) throw new Error(result.error || 'Unable to send your message')
+      setSent(true)
+      setFormData({ name: '', email: '', phone: '', subject: '', message: '' })
+    } catch (error) {
+      setSubmitError(error.message)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -74,6 +90,11 @@ export default function ParentContact() {
                 {t('parentContact.messageSent')}
               </div>
             )}
+            {submitError && (
+              <div role="alert" className="mb-4 px-4 py-2 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700">
+                {submitError}
+              </div>
+            )}
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
@@ -100,6 +121,15 @@ export default function ParentContact() {
                 </div>
               </div>
               <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1">{t('phone')}</label>
+                <input
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
+                />
+              </div>
+              <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1">{t('subject')}</label>
                 <input
                   type="text"
@@ -123,10 +153,11 @@ export default function ParentContact() {
               </div>
               <button
                 type="submit"
-                className="inline-flex items-center gap-2 bg-emerald-600 text-white px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-emerald-700 transition-colors"
+                disabled={submitting}
+                className="inline-flex items-center gap-2 bg-emerald-600 text-white px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-emerald-700 transition-colors disabled:opacity-50"
               >
                 <Send size={15} />
-                {t('parentContact.sendMessageBtn')}
+                {submitting ? t('loading') : t('parentContact.sendMessageBtn')}
               </button>
             </form>
           </div>

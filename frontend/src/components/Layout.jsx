@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useI18n } from '../i18n/context'
 import LanguageSwitcher from './LanguageSwitcher'
@@ -18,12 +18,8 @@ import {
   Receipt,
   BookOpen,
   CalendarClock,
-  BookOpenCheck,
   Bell,
   Download,
-  BookMarked,
-  Bus,
-  Stethoscope,
   Wallet,
   CalendarOff,
   CalendarDays,
@@ -31,6 +27,8 @@ import {
   Boxes,
   ShieldCheck,
   Award,
+  Sun,
+  Moon,
 } from 'lucide-react'
 
 const navSections = [
@@ -54,9 +52,6 @@ const navSections = [
     items: [
       { to: '/admin/attendance', label: 'attendance', icon: CalendarCheck },
       { to: '/admin/timetable', label: 'timetable', icon: CalendarClock },
-      { to: '/admin/library', label: 'library', icon: BookMarked },
-      { to: '/admin/transport', label: 'transport', icon: Bus },
-      { to: '/admin/health', label: 'healthRecords', icon: Stethoscope },
     ],
   },
   {
@@ -71,7 +66,6 @@ const navSections = [
     label: 'academic',
     items: [
       { to: '/admin/marks', label: 'marksReports', icon: BookOpen },
-      { to: '/admin/homework', label: 'homework', icon: BookOpenCheck },
       { to: '/admin/certificates', label: 'certificates', icon: Award },
     ],
   },
@@ -103,9 +97,15 @@ const navSections = [
 
 export default function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('admin_theme') === 'dark')
   const navigate = useNavigate()
   const { t } = useI18n()
   const adminUser = JSON.parse(localStorage.getItem('admin_user') || '{}')
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', darkMode)
+    localStorage.setItem('admin_theme', darkMode ? 'dark' : 'light')
+  }, [darkMode])
 
   const handleLogout = () => {
     localStorage.removeItem('admin_token')
@@ -114,7 +114,7 @@ export default function Layout({ children }) {
   }
 
   return (
-    <div className="min-h-screen flex">
+    <div className={`admin-shell min-h-screen flex ${darkMode ? 'admin-dark' : 'admin-light'}`}>
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/30 z-40 lg:hidden"
@@ -189,11 +189,6 @@ export default function Layout({ children }) {
             {t('logout')}
           </button>
         </div>
-
-        <div className="px-5 py-4 border-t border-white/10">
-          <p className="text-xs text-blue-300">{t('academicYear')}</p>
-          <p className="text-xs text-blue-200/60 mt-0.5">v2.0.0</p>
-        </div>
       </aside>
 
       <div className="flex-1 flex flex-col min-w-0 lg:pl-64">
@@ -209,6 +204,15 @@ export default function Layout({ children }) {
 
           <div className="flex items-center gap-3">
             <LanguageSwitcher />
+            <button
+              type="button"
+              onClick={() => setDarkMode((value) => !value)}
+              className="theme-toggle p-2 rounded-lg border border-school-border text-school-muted hover:text-school-primary hover:bg-school-surface transition-colors"
+              aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+              title={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              {darkMode ? <Sun size={17} /> : <Moon size={17} />}
+            </button>
             <div className="text-right hidden sm:block">
               <p className="text-sm font-medium text-school-text leading-tight">{adminUser.full_name || t('admin')}</p>
               <p className="text-xs text-school-muted leading-tight">{t('schoolAdministrator')}</p>
@@ -219,9 +223,8 @@ export default function Layout({ children }) {
           </div>
         </header>
 
-        <main className="flex-1 p-4 lg:p-8 overflow-auto relative bg-gradient-to-br from-emerald-700 via-teal-700 to-cyan-700 rounded-2xl m-2 lg:m-3">
-          {/* Animated Bubbles */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl">
+        <main className="flex-1 p-4 lg:p-8 overflow-auto relative bg-school-surface border-l border-school-border">
+          <div className="hidden">
             <div className="absolute rounded-full bg-white/10 blur-sm" style={{ width: 120, height: 120, top: '5%', right: '10%', animation: 'bubbleFloat1 14s ease-in-out infinite' }} />
             <div className="absolute rounded-full bg-white/8 blur-xs" style={{ width: 80, height: 80, top: '20%', left: '5%', animation: 'bubbleFloat2 18s ease-in-out infinite' }} />
             <div className="absolute rounded-full bg-white/12 blur-sm" style={{ width: 160, height: 160, bottom: '10%', right: '20%', animation: 'bubbleFloat3 22s ease-in-out infinite' }} />

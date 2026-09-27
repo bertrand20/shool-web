@@ -106,8 +106,8 @@ export default function LibraryManager() {
   return (
     <div>
       <div className="page-header">
-        <h1 className="page-title text-white">{t('library')}</h1>
-        <p className="page-subtitle text-emerald-100">{t('library.subtitle')}</p>
+        <h1 className="page-title">{t('library')}</h1>
+        <p className="page-subtitle">{t('library.subtitle')}</p>
       </div>
 
       {msg && (
@@ -118,16 +118,16 @@ export default function LibraryManager() {
 
       {summary && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-white"><p className="text-2xl font-bold">{summary.total_books}</p><p className="text-xs text-emerald-100">{t('library.totalTitles')}</p></div>
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-white"><p className="text-2xl font-bold">{summary.available}</p><p className="text-xs text-emerald-100">{t('library.copiesAvailable')}</p></div>
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-white"><p className="text-2xl font-bold">{summary.issued}</p><p className="text-xs text-emerald-100">{t('library.currentlyIssued')}</p></div>
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-white"><p className="text-2xl font-bold text-amber-300">{summary.overdue}</p><p className="text-xs text-emerald-100">{t('library.overdue')}</p></div>
+          <div className="panel-card"><p className="text-2xl font-bold">{summary.total_books}</p><p className="text-xs text-school-muted">{t('library.totalTitles')}</p></div>
+          <div className="panel-card"><p className="text-2xl font-bold">{summary.available}</p><p className="text-xs text-school-muted">{t('library.copiesAvailable')}</p></div>
+          <div className="panel-card"><p className="text-2xl font-bold">{summary.issued}</p><p className="text-xs text-school-muted">{t('library.currentlyIssued')}</p></div>
+          <div className="panel-card"><p className="text-2xl font-bold text-amber-600">{summary.overdue}</p><p className="text-xs text-school-muted">{t('library.overdue')}</p></div>
         </div>
       )}
 
-      <div className="flex gap-1 bg-white/10 backdrop-blur-sm rounded-xl p-1 mb-6 w-fit">
-        <button onClick={() => setTab('books')} className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${tab === 'books' ? 'bg-white text-emerald-700' : 'text-white/70 hover:text-white'}`}>{t('library.books')} ({books.length})</button>
-        <button onClick={() => setTab('issues')} className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${tab === 'issues' ? 'bg-white text-emerald-700' : 'text-white/70 hover:text-white'}`}>{t('library.issues')} ({issues.length})</button>
+      <div className="flex gap-1 bg-white rounded-xl p-1 mb-6 w-fit border border-school-border">
+        <button onClick={() => setTab('books')} className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${tab === 'books' ? 'bg-school-primary text-white' : 'text-school-muted hover:text-school-primary'}`}>{t('library.books')} ({books.length})</button>
+        <button onClick={() => setTab('issues')} className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${tab === 'issues' ? 'bg-school-primary text-white' : 'text-school-muted hover:text-school-primary'}`}>{t('library.issues')} ({issues.length})</button>
       </div>
 
       {tab === 'books' && (
