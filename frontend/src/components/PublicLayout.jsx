@@ -44,15 +44,8 @@ export default function PublicLayout({ children }) {
     const onKeyDown = (event) => {
       if (event.key === 'Escape') setSidebarOpen(false)
     }
-    const onResize = () => {
-      if (window.matchMedia('(min-width: 1024px)').matches) setSidebarOpen(false)
-    }
     document.addEventListener('keydown', onKeyDown)
-    window.addEventListener('resize', onResize)
-    return () => {
-      document.removeEventListener('keydown', onKeyDown)
-      window.removeEventListener('resize', onResize)
-    }
+    return () => document.removeEventListener('keydown', onKeyDown)
   }, [sidebarOpen])
 
   return (
@@ -83,7 +76,7 @@ export default function PublicLayout({ children }) {
 
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="lg:hidden shrink-0 p-2 text-school-primary hover:bg-school-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-school-accent"
+                className="shrink-0 p-2 text-school-primary hover:bg-school-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-school-accent"
                 aria-label={sidebarOpen ? 'Close navigation menu' : 'Open navigation menu'}
                 aria-expanded={sidebarOpen}
                 aria-controls="public-mobile-nav"
@@ -93,43 +86,29 @@ export default function PublicLayout({ children }) {
             </div>
           </div>
 
-          <nav
-            className="hidden lg:flex flex-wrap items-center justify-center gap-x-1 gap-y-0.5 pb-3"
-            aria-label="Primary navigation"
-          >
-            {navItems.map(({ to, label }) => (
-              <NavLink
-                key={to}
-                to={to}
-                className={({ isActive }) =>
-                  `public-link-underline py-2 px-2.5 text-sm font-semibold whitespace-nowrap transition-colors ${isActive ? 'text-school-primary' : 'text-school-muted hover:text-school-primary'}`
-                }
-              >
-                {t(label)}
-              </NavLink>
-            ))}
-          </nav>
         </div>
 
         {sidebarOpen && (
           <div
             id="public-mobile-nav"
-            className="lg:hidden border-t border-school-border bg-white max-h-[calc(100dvh-4.25rem)] overflow-y-auto overscroll-contain"
+            className="border-t border-school-border bg-white max-h-[calc(100dvh-4.25rem)] overflow-y-auto overscroll-contain"
           >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2">
-              {navItems.map(({ to, label, icon: Icon }) => (
-                <NavLink
-                  key={to}
-                  to={to}
-                  onClick={() => setSidebarOpen(false)}
-                  className={({ isActive }) =>
-                    `flex items-center gap-3 px-2 py-3 text-sm font-semibold border-b border-school-border/60 last:border-b-0 ${isActive ? 'text-school-primary bg-school-surface' : 'text-school-muted hover:bg-school-surface'}`
-                  }
-                >
-                  <Icon size={16} className="text-school-accent shrink-0" />
-                  <span className="truncate">{t(label)}</span>
-                </NavLink>
-              ))}
+              <nav aria-label="Primary navigation">
+                {navItems.map(({ to, label, icon: Icon }) => (
+                  <NavLink
+                    key={to}
+                    to={to}
+                    onClick={() => setSidebarOpen(false)}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-2 py-3 text-sm font-semibold border-b border-school-border/60 last:border-b-0 ${isActive ? 'text-school-primary bg-school-surface' : 'text-school-muted hover:bg-school-surface'}`
+                    }
+                  >
+                    <Icon size={16} className="text-school-accent shrink-0" />
+                    <span className="truncate">{t(label)}</span>
+                  </NavLink>
+                ))}
+              </nav>
               <div className="sm:hidden flex items-center justify-between gap-3 py-4">
                 <LanguageSwitcher />
                 <NavLink
